@@ -210,7 +210,21 @@ class ActionResolverTest {
     }
 
     @Test
-    void postPushTag() throws Exception {
+    void postPushVecode() throws Exception {
+        String projectName = "postPushVecode";
+        jenkins.createFreeStyleProject(projectName);
+        when(request.getRestOfPath()).thenReturn("");
+        when(request.getMethod()).thenReturn("POST");
+        when(request.getHeader("X-Vecode-Event")).thenReturn("Push Hook");
+        when(request.getInputStream()).thenReturn(new ResourceServletInputStream("ActionResolverTest_postPush.json"));
+
+        WebHookAction resolvedAction = new ActionResolver().resolve(projectName, request);
+
+        assertThat(resolvedAction, instanceOf(PushBuildAction.class));
+    }
+
+    @Test
+    void postTagPush() throws Exception {
         String projectName = "postPushTag";
         jenkins.createFreeStyleProject(projectName);
         when(request.getRestOfPath()).thenReturn("");

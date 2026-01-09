@@ -4,6 +4,7 @@ import static com.dabsquared.gitlabjenkins.util.LoggerUtil.toArray;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 import com.dabsquared.gitlabjenkins.util.ACLUtil;
+import com.dabsquared.gitlabjenkins.util.HeaderUtil;
 import com.dabsquared.gitlabjenkins.util.JsonUtil;
 import com.dabsquared.gitlabjenkins.webhook.build.MergeRequestBuildAction;
 import com.dabsquared.gitlabjenkins.webhook.build.NoteBuildAction;
@@ -105,12 +106,12 @@ public class ActionResolver {
     }
 
     private WebHookAction onPost(Item project, StaplerRequest2 request) {
-        String eventHeader = request.getHeader("X-Gitlab-Event");
+        String eventHeader = HeaderUtil.getHeader(request, "Event");
         if (eventHeader == null) {
-            LOGGER.log(Level.FINE, "Missing X-Gitlab-Event header");
+            LOGGER.log(Level.FINE, "Missing X-Gitlab-Event or X-Vecode-Event header");
             return new NoopAction();
         }
-        String tokenHeader = request.getHeader("X-Gitlab-Token");
+        String tokenHeader = HeaderUtil.getHeader(request, "Token");
         switch (eventHeader) {
             case "Merge Request Hook":
                 return new MergeRequestBuildAction(project, getRequestBody(request), tokenHeader);
@@ -124,7 +125,7 @@ public class ActionResolver {
             case "System Hook":
                 return onSystemHook(project, getRequestBody(request), tokenHeader);
             default:
-                LOGGER.log(Level.FINE, "Unsupported X-Gitlab-Event header: {0}", eventHeader);
+                LOGGER.log(Level.FINE, "Unsupported X-Gitlab-Event or X-Vecode-Event header: {0}", eventHeader);
                 return new NoopAction();
         }
     }

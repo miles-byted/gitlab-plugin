@@ -34,6 +34,7 @@
       <name>jenkinsci-releases</name>
       <url>https://repo.jenkins-ci.org/releases</url>
     </repository>
+    
     <snapshotRepository>
       <id>maven.jenkins-ci.org</id>
       <name>jenkinsci-snapshots</name>
@@ -270,6 +271,19 @@
   <!-- get every artifact through repo.jenkins-ci.org, which proxies all the artifacts that we need -->
   <repositories>
     <repository>
+        <id>maven-ali</id>
+        <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+        <name>aliyun</name>
+        <releases>
+            <enabled>true</enabled>
+        </releases>
+        <snapshots>
+            <enabled>true</enabled>
+            <updatePolicy>always</updatePolicy>
+            <checksumPolicy>fail</checksumPolicy>
+        </snapshots>
+    </repository>
+    <repository>
       <id>repo.jenkins-ci.org</id>
       <url>https://repo.jenkins-ci.org/public/</url>
     </repository>
@@ -280,6 +294,11 @@
   </repositories>
 
   <pluginRepositories>
+    <pluginRepository>
+        <id>central</id>
+        <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+        <name>aliyun</name>
+    </pluginRepository>
     <pluginRepository>
       <id>repo.jenkins-ci.org</id>
       <url>https://repo.jenkins-ci.org/public/</url>
